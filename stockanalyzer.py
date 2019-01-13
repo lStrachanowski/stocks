@@ -60,6 +60,9 @@ def stock(stockval):
     # Pobiera wskaźniki
     indicators = company_indicators(ticker)
     # Dzienne zwroty 
+
+    get_isin(stockval[:-4])
+
     a = daily_return(stockval)
     data = [
     go.Bar(
@@ -273,6 +276,16 @@ def get_ticker(stock_name):
                 return (row['ticker'])
 
 
+# Pobiera ISIN
+def get_isin(stock_name):
+    stock_n = stock_name.upper()
+    with open('stock_tickers_nowy.csv', newline='') as csv_file:
+        reader = csv.DictReader(csv_file, delimiter=';')
+        for row in reader:
+            if row['nazwa'] == stock_n:
+                print(row['ISIN'])
+                return (row['ISIN'])
+                
 
 # Zwraca kursu danego waloru 
 # opcja 1 bez wolumenu 
@@ -339,3 +352,4 @@ def company_indicators(stock_ticker):
         company_data.append(['C/WK',cwk_val[-1].getText()])
         company_data.append(['C/Z',cz_val[0].getText()])
         return company_data
+
