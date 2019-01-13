@@ -1,0 +1,129 @@
+{% extends 'index.html' %}
+{% block content%}
+
+<div class="stock-container">
+        <div class="stock_header">
+                {{stock_name}} : {{close_value}} PLN ( {{daily_return }} %)
+        </div>
+        <img src="{{ url_for('static', filename='chart.png')}}" class="candle-img">
+        <div class="book-header">
+                        Wskaźniki
+                </div>
+        <div class="tables-container indicator-bottom">
+                <div class="table-spacing">
+                        <table>
+                                {% for indicator in indicators|batch(8) %}
+                                <tr>
+                                        {% for data in indicator %}
+                                        <td class="td-style">{{data[0]}}:   {{data[1]}}</td>
+                                        {% endfor%}
+                                </tr>
+                                {% endfor %}
+                        </table>
+                </div>
+        </div>
+
+        <div class="tables-container">
+                <div class="table-spacing">
+                        <div class="book-header">
+                                Arkusz zlecen kupna:
+                        </div>
+                        <div>
+                                <div class="header-format">
+                                        <p class="book-element book-element-header-white">
+                                                Kurs
+                                        </p>
+                                        <p class="book-element book-element-header-white">
+                                                Wolumen
+                                        </p>
+                                        <p class="book-element book-element-header-white">
+                                                Wartosc
+                                        </p>
+                                        <p class="book-element book-element-header-white">
+                                                Ilosc
+                                        </p>
+                                        <p class="book-element book-element-header-white">
+                                                %
+                                        </p>
+                                </div>
+
+                                {% for val in o_book[0] %}
+                                <div class="book-item">
+                                        <p class="book-element book-element-bold">
+                                                {{val[0]}}
+                                        </p>
+                                        <p class="book-element">
+                                                {{val[1]}}
+                                        </p>
+                                        <p class="book-element">
+                                                {{val[2]}}
+                                        </p>
+                                        <p class="book-element">
+                                                {{val[3]}}
+                                        </p>
+                                        <p class="book-element">
+                                                {{val[4]}}
+                                        </p>
+                                </div>
+                                {% endfor %}
+                        </div>
+                </div>
+                <div class="table-spacing">
+                        <div class="book-header">
+                                Arkusz zlecen sprzedazy:
+                        </div>
+                        <div class="header-format">
+                                <p class="book-element book-element-header-white ">
+                                        Kurs
+                                </p>
+                                <p class="book-element book-element-header-white">
+                                        Wolumen
+                                </p>
+                                <p class="book-element book-element-header-white">
+                                        Wartosc
+                                </p>
+                                <p class="book-element book-element-header-white">
+                                        Ilosc
+                                </p>
+                                <p class="book-element book-element-header-white">
+                                        %
+                                </p>
+                        </div>
+                        {% for val in o_book[1] %}
+                        <div class="book-item">
+                                <p class="book-element book-element-bold">
+                                        {{val[0]}}
+                                </p>
+                                <p class="book-element">
+                                        {{val[1]}}
+                                </p>
+                                <p class="book-element">
+                                        {{val[2]}}
+                                </p>
+                                <p class="book-element">
+                                        {{val[3]}}
+                                </p>
+                                <p class="book-element">
+                                        {{val[4]}}
+                                </p>
+                        </div>
+                        {% endfor %}
+
+                </div>
+                <div>
+                        <div class="book-header">
+                                Dzienna % stopa zwrotu za ostatnie 90 dni
+                        </div>
+                        <img src="{{ url_for('static', filename='daily_return.png')}}" class="d-return">
+
+                        <div class="book-header">
+                                Histogram zwrotu
+                        </div>
+                        <img src="{{ url_for('static', filename='histogram.png')}}" class="d-return">
+
+                </div>
+
+        </div>
+</div>
+
+{% endblock%}

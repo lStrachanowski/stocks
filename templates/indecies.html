@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% block content%}
+wig
+<div class="result-container">
+    <div class="item-container-header">
+        <div class="item-style">
+            Walor
+        </div>
+        <div class="item-style">
+            Ticker
+        </div>
+        <div class="item-style">
+            Kurs
+        </div>
+        <div class="item-style">
+            Zmiana
+        </div>
+    </div>
+    {% for val in results %}
+    <div class="item-container found-color">
+        <div class="item-style">
+            <a href="{{url_for('stock',stockval=val[0])}}">{{val[0]}}</a>
+        </div>
+        <div class="item-style">
+            <a href="https://stooq.pl/q/?s={{val[1]}}">{{val[1]}}</a>
+        </div>
+        <div class="item-style">
+            {{val[3]}}  
+        </div>
+        <div class="item-style">
+            {{val[2]}} % 
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

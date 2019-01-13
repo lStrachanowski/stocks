@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% block content%}
+
+<div class="result-container">
+    <div class="item-container-header">
+        <div class="item-style">
+            Walor
+        </div>
+        <div class="item-style">
+            Ticker
+        </div>
+        <div class="item-style">
+            Wolumen dzisiaj
+        </div>
+        <div class="item-style">
+            Sredni wolumen
+        </div>
+        <div class="item-style">
+            % od średniej
+        </div>
+        <div class="item-style">
+            Zmiana
+        </div>
+    </div>
+    {% for val in results %}
+    {% if val[1] %}
+    <div class="item-container found-color">
+        <div class="item-style">
+            <a href="{{url_for('stock',stockval=val[0])}}">{{val[0]}}</a>
+        </div>
+        <div class="item-style">
+            <a href="https://stooq.pl/q/?s={{val[1]}}">{{val[1]}}</a>
+        </div>
+        <div class="item-style">
+            {{val[2]}}
+        </div>
+        <div class="item-style">
+            {{val[3]}}
+        </div>
+        <div class="item-style">
+            {{val[4]}}%
+        </div>
+        <div class="item-style">
+            {{val[5]}}%
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
