@@ -63,6 +63,9 @@ def stock(stockval):
 
     get_isin(stockval[:-4])
 
+    sma_100 = sma(stockval, 100)
+    sma_200 = sma(stockval, 200)
+
     a = daily_return(stockval)
     data = [
     go.Bar(
@@ -82,6 +85,25 @@ def stock(stockval):
     histogram_fig = go.Figure(data=histogram, layout=hist_layout)
     pio.write_image(histogram_fig, 'static/histogram.png', width=550, height=350)
     
+    # Średnie kroczące
+    sma100 = go.Scatter(
+    x = sma_100.index,
+    y = sma_100['<CLOSE>'],
+    line = dict(color = '#af211c',
+    dash = 'dot'),
+    opacity = 0.8,
+    name = 'sma 100'
+    )
+
+    sma200 = go.Scatter(
+    x = sma_200.index,
+    y = sma_200['<CLOSE>'],
+    line = dict(color = '#bc59ff',
+    dash = 'dot'),
+    opacity = 0.8,
+    name = 'sma 200'
+    )
+
     #  Bollinger bands + wykres świecowy
     boll = bollinger(stockval)
 
@@ -89,19 +111,22 @@ def stock(stockval):
     x=boll[0].index,
     y=boll[0]['<CLOSE>'],
     line = dict(color = '#17BECF'),
-    opacity = 0.8)
+    opacity = 0.8,
+    name = 'bollinger up')
 
     boll_min = go.Scatter(
     x=boll[1].index,
     y=boll[1]['<CLOSE>'],
     line = dict(color = '#17BECF'),
-    opacity = 0.8)
+    opacity = 0.8,
+    name = 'bollinger 65 mean')
 
     boll_low = go.Scatter(
     x=boll[2].index,
     y=boll[2]['<CLOSE>'],
     line = dict(color = '#17BECF'),
-    opacity = 0.8)
+    opacity = 0.8,
+    name = 'bollinger down')
 
     vol = go.Bar(
     x=main_df[-90:].index,
@@ -113,7 +138,8 @@ def stock(stockval):
                     width=0.5),
             ),
     opacity = 0.2,
-    yaxis='y2')
+    yaxis='y2',
+    name = 'volume')
 
     candle_boll = go.Candlestick(
     x = main_df[:90].index, open = main_df[:90]['<OPEN>'], high = main_df[:90]['<HIGH>'], low = main_df[:90]['<LOW>'], close = main_df[:90]['<CLOSE>'])
@@ -125,7 +151,7 @@ def stock(stockval):
         side='right'
     ))
 
-    boll_data = [boll_high,boll_min,boll_low,candle_boll,vol]
+    boll_data = [boll_high,boll_min,boll_low,candle_boll,vol,sma100,sma200]
 
     boll_fig = dict(data=boll_data, layout=candle_layout)
 
@@ -283,7 +309,6 @@ def get_isin(stock_name):
         reader = csv.DictReader(csv_file, delimiter=';')
         for row in reader:
             if row['nazwa'] == stock_n:
-                print(row['ISIN'])
                 return (row['ISIN'])
                 
 
@@ -355,4 +380,16 @@ def company_indicators(stock_ticker):
         else:
             company_data.append(['C/Z','N.A'])
         return company_data
+
+# Oblicza średnią kroczącą
+
+def sma(stockval, value):
+    data =  stock_data(stockval,1,365)
+    mean = data[['<CLOSE>']].rolling(value).mean()
+    mean = mean.dropna()
+    nr_elements = len(data.index)
+    if nr_elements > 65:
+        return mean.iloc[-65:]
+    else:
+        return mean
 
