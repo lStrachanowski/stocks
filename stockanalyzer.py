@@ -350,6 +350,9 @@ def company_indicators(stock_ticker):
         cwk_val = cz[1].find_all('td', id='f13')
         cz_val = cz[0].find_all('td', id='f13')
         company_data.append(['C/WK',cwk_val[-1].getText()])
-        company_data.append(['C/Z',cz_val[0].getText()])
+        if cz_val:
+            company_data.append(['C/Z',cz_val[0].getText()])
+        else:
+            company_data.append(['C/Z','N.A'])
         return company_data
 
