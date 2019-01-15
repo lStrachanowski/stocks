@@ -374,7 +374,10 @@ def company_indicators(stock_ticker):
         cz = soup.find_all('table', id='t1')
         cwk_val = cz[1].find_all('td', id='f13')
         cz_val = cz[0].find_all('td', id='f13')
-        company_data.append(['C/WK',cwk_val[-1].getText()])
+        if cwk_val:
+            company_data.append(['C/WK',cwk_val[-1].getText()])
+        else:
+            company_data.append(['C/WK','N.A'])
         if cz_val:
             company_data.append(['C/Z',cz_val[0].getText()])
         else:
