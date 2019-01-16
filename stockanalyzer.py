@@ -61,7 +61,7 @@ def stock(stockval):
     indicators = company_indicators(ticker)
     # Dzienne zwroty 
 
-    get_isin(stockval[:-4])
+    get_news(get_isin(stockval[:-4]))
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -396,3 +396,21 @@ def sma(stockval, value):
     else:
         return mean
 
+# Pobiera komunikaty o danej spółce
+def get_news(isin):
+    base_url = r'https://www.money.pl/gielda/spolki-gpw/'
+    page = requests.get(base_url+isin+',emitent,1.html')
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        table = soup.find_all('tr', {"class":'npeb8d-3'})
+        news = []
+        for val in table:
+            td = val.find_all('td')
+            data = []
+            for v in td:
+                data.append(v.getText())
+                if v.find('a'):
+                    link = r'https://www.money.pl' + v.find('a')['href']
+                    data.append(link)
+            news.append(data)
+        print(news)
