@@ -7,20 +7,36 @@
         </div>
         <img src="{{ url_for('static', filename='chart.png')}}" class="candle-img">
         <div class="book-header">
-                        Wskaźniki
-                </div>
+                Wskaźniki
+        </div>
         <div class="tables-container indicator-bottom">
                 <div class="table-spacing">
                         <table>
                                 {% for indicator in indicators|batch(8) %}
                                 <tr>
                                         {% for data in indicator %}
-                                        <td class="td-style">{{data[0]}}:   {{data[1]}}</td>
+                                        <td class="td-style">{{data[0]}}: {{data[1]}}</td>
                                         {% endfor%}
                                 </tr>
                                 {% endfor %}
                         </table>
                 </div>
+        </div>
+
+        <div class="news-container">
+                <div class="book-header">
+                        Komunikaty
+                </div>
+                {% for news in stock_news %}
+                <div class="news-row row-item-style">
+                        <div class="row-item row-item-date">{{news[0]}}</div>
+                        <div class="row-item-wide"><a href="{{news[2]}}" >{{news[1]}}</a></div>
+                        <div class="row-item">{{news[3]}} PLN</div>
+                        <div class="row-item">{{news[4]}} %</div>
+                </div>
+
+                {% endfor %}
+
         </div>
 
         <div class="tables-container">

@@ -53,15 +53,15 @@ def download():
 def stock(stockval):
     # pobiera dane dla waloru
     main_df = stock_data(stockval,2,120)
-    # ustala tivker dla danego waloru 
+    # ustala ticker dla danego waloru 
     ticker = get_ticker(stockval[:-4])
     # Pobiera arkusz zleceń 
     ten_orders = order_book(ticker)
     # Pobiera wskaźniki
     indicators = company_indicators(ticker)
-    # Dzienne zwroty 
 
-    get_news(get_isin(stockval[:-4]))
+    # Pobiera wiadomości
+    news = get_news(get_isin(stockval[:-4]))
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -159,7 +159,7 @@ def stock(stockval):
 
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
-    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators) 
+    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])
@@ -413,4 +413,4 @@ def get_news(isin):
                     link = r'https://www.money.pl' + v.find('a')['href']
                     data.append(link)
             news.append(data)
-        print(news)
+        return news[1:10:]

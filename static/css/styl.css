@@ -204,3 +204,40 @@ a:visited{
 .indicator-bottom{
     padding-bottom: 30px;
 }
+
+.news-container{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-bottom: 2%;
+}
+
+.news-row{
+    background-color: #f1f1f1;
+    margin: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.row-item{
+    margin: 2px 15px;
+    color: rgba(77, 84, 84, 0.923);
+    width:10%
+}
+
+.row-item-wide{
+    margin: 2px 15px;
+    color: rgba(77, 84, 84, 0.923);
+    width:50%
+}
+
+.row-item-style{
+    font-size: 18px;
+    justify-content: space-between;
+}
+
+.row-item-date{
+    font-size: 14px;
+}
+
