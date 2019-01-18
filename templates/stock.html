@@ -30,7 +30,7 @@
                 {% for news in stock_news %}
                 <div class="news-row row-item-style">
                         <div class="row-item row-item-date">{{news[0]}}</div>
-                        <div class="row-item-wide"><a href="{{news[2]}}" >{{news[1]}}</a></div>
+                        <div class="row-item-wide"><a href="{{news[2]}}">{{news[1]}}</a></div>
                         <div class="row-item">{{news[3]}} PLN</div>
                         <div class="row-item">{{news[4]}} %</div>
                 </div>
@@ -38,6 +38,8 @@
                 {% endfor %}
 
         </div>
+
+
 
         <div class="tables-container">
                 <div class="table-spacing">
@@ -137,6 +139,44 @@
                         </div>
                         <img src="{{ url_for('static', filename='histogram.png')}}" class="d-return">
 
+                </div>
+
+        </div>
+
+        <div class="book-header">
+                Akcjonariat
+        </div>
+        <div class="share-main">
+                <div class="shareholders-container">
+                        <div class="shareholders-row shareholders-header">
+                                <div class="shareholders-item shareholders-narrow">Lp</div>
+                                <div class="shareholders-item shareholders-wide">Akcjonariusz</div>
+                                <div class="shareholders-item shareholders-medium">Udział w kapitale</div>
+                                <div class="shareholders-item shareholders-medium">Liczba akcji</div>
+                                <div class="shareholders-item shareholders-narrow">Ostatnia zmiana</div>
+                                <div class="shareholders-item shareholders-medium">Wartość rynkowa (PLN)</div>
+                                <div class="shareholders-item shareholders-medium">Udział na WZA</div>
+                                <div class="shareholders-item shareholders-medium">Liczba głosów</div>
+                                <div class="shareholders-item shareholders-narrow">Ostatnia zmiana</div>
+                                <div class="shareholders-item shareholders-wide">Data aktualizacji</div>
+                        </div>
+                        {%for item in shareholder%}
+                        <div class="shareholders-row">
+                                <div class="shareholders-item shareholders-narrow">{{item[0]}}</div>
+                                <div class="shareholders-item shareholders-wide">{{item[1]}}</div>
+                                <div class="shareholders-item shareholders-medium">{{item[2]}}</div>
+                                <div class="shareholders-item shareholders-medium">{{item[3]}}</div>
+                                <div class="shareholders-item shareholders-narrow">{{item[4]}}</div>
+                                <div class="shareholders-item shareholders-medium">{{item[5]}}</div>
+                                <div class="shareholders-item shareholders-medium">{{item[6]}}</div>
+                                <div class="shareholders-item shareholders-medium">{{item[7]}}</div>
+                                <div class="shareholders-item shareholders-narrow">{{item[8]}}</div>
+                                <div class="shareholders-item shareholders-wide">{{item[9]}}</div>
+                        </div>
+                        {%endfor %}
+                </div>
+                <div class="shareholders-pie">
+                        <img src="https://stooq.pl/q/h/c/?s={{ticker}}">
                 </div>
 
         </div>

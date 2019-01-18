@@ -63,6 +63,9 @@ def stock(stockval):
     # Pobiera wiadomości
     news = get_news(get_isin(stockval[:-4]))
 
+    # Pobiera dane o akcjonariacie
+    shareholders = get_shareholders(ticker)
+
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
 
@@ -159,7 +162,7 @@ def stock(stockval):
 
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
-    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news) 
+    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])
@@ -385,7 +388,6 @@ def company_indicators(stock_ticker):
         return company_data
 
 # Oblicza średnią kroczącą
-
 def sma(stockval, value):
     data =  stock_data(stockval,1,365)
     mean = data[['<CLOSE>']].rolling(value).mean()
@@ -414,3 +416,20 @@ def get_news(isin):
                     data.append(link)
             news.append(data)
         return news[1:10:]
+
+# Pobiera dane o akcjonariacie
+def get_shareholders(stock_ticker):
+    base_url = r'https://stooq.pl/q/h/?s='
+    page = requests.get(base_url+stock_ticker)
+    rows_data = []
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        table = soup.find_all('table',class_="fth1")
+        rows = table[0].find_all('tr',id='r')
+        for v in rows:
+            row_values = []
+            for item in v.findChildren('td'):
+                row_values.append(item.getText())
+            rows_data.append(row_values)
+    return rows_data
+

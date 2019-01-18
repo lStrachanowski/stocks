@@ -241,3 +241,48 @@ a:visited{
     font-size: 14px;
 }
 
+.shareholders-container{
+    flex-direction: row;
+    width: 80%;
+    margin-bottom: 2%;
+}
+
+.shareholders-item{
+    font-size: 18px;
+}
+
+.shareholders-pie{
+    width: 15%;
+    float: left;
+}
+
+.shareholders-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    font-size: 20px;
+    color: rgba(77, 84, 84, 0.923);
+    margin: 5px;
+    padding: 10px;
+}
+
+.shareholders-narrow{
+    width: 2%
+}
+.shareholders-medium{
+    width: 5%;
+}
+.shareholders-wide{
+    width: 20%;
+}
+
+.share-main{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.shareholders-header{
+    background-color:#f3f7ff;
+}
