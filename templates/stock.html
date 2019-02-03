@@ -22,22 +22,62 @@
                         </table>
                 </div>
         </div>
+        <div class="rows-container">
 
-        <div class="news-container">
-                <div class="book-header">
-                        Komunikaty
-                </div>
-                {% for news in stock_news %}
-                <div class="news-row row-item-style">
-                        <div class="row-item row-item-date">{{news[0]}}</div>
-                        <div class="row-item-wide"><a href="{{news[2]}}">{{news[1]}}</a></div>
-                        <div class="row-item">{{news[3]}} PLN</div>
-                        <div class="row-item">{{news[4]}} %</div>
+
+
+                <div class="news-container">
+                        <div class="book-header">
+                                Komunikaty
+                        </div>
+                        {% for news in stock_news %}
+                        <div class="news-row row-item-style">
+                                <div class="row-item row-item-date">{{news[0]}}</div>
+                                <div class="row-item-wide"><a href="{{news[2]}}">{{news[1]}}</a></div>
+                                <div class="row-item">{{news[3]}} PLN</div>
+                                <div class="row-item">{{news[4]}} %</div>
+                        </div>
+                        {% endfor %}
+
                 </div>
 
-                {% endfor %}
+                <div class="news-container">
+                        <div class="book-header">
+                                Dane finansowe
+                        </div>
+                        <div class="finance-container">
+                                <div class="item-display">
+                                        {% for year in fin_data[0][0:5] %}
+                                        <div class="data-style bold-style">{{year}}</div>
+                                        {% endfor %}
+                                </div>
+                                {% for value in fin_data[1] %}
+                                {% for element in value %}
+                                <div class="item-display">
+                                        <div class="data-style">{{element[0]}}</div>
+                                        {% for amount in element[1] %}
+                                        {% if amount %}
+                                        <div class="data-style">
+                                                {{amount}}
+                                        </div>
+                                        {% endif %}
+
+                                        {% endfor %}
+                                </div>
+                                {% endfor %}
+                                {% endfor %}
+                                <div class="item-display">
+                                        {% for year in fin_data[0][5:11] %}
+                                        <div class="data-style bold-style">{{year}}</div>
+                                        {% endfor %}
+                                </div>
+                        </div>
+                </div>
 
         </div>
+
+
+
 
 
 

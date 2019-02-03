@@ -190,7 +190,6 @@ a:visited{
 
 .d-return{
     width: 100%;
-    /* height: 100%; */
 }
 
 .td-style{
@@ -285,4 +284,38 @@ a:visited{
 
 .shareholders-header{
     background-color:#f3f7ff;
+}
+
+.finance-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.item-display{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.data-style{
+    margin: 5px 2px;
+    width: 10%;
+    font-size: 14px;
+}
+
+.data-style:first-child{
+    color: rgba(77, 84, 84, 0.923);
+    width: 50%;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.bold-style{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.rows-container{
+    display: flex;
 }

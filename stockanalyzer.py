@@ -63,6 +63,9 @@ def stock(stockval):
     # Pobiera wiadomości
     news = get_news(get_isin(stockval[:-4]))
 
+    # Pobiera dane fiansowe
+    financial_data = get_financial_data(get_isin(stockval[:-4]))
+
     # Pobiera dane o akcjonariacie
     shareholders = get_shareholders(ticker)
 
@@ -162,7 +165,7 @@ def stock(stockval):
 
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
-    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker) 
+    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])
@@ -359,7 +362,6 @@ def bollinger(stockval):
         boll_data = (mean_up.iloc[-90:], mean.iloc[-90:], mean_down.iloc[-90:])
         return boll_data
 
-
 # Pobiera dane o wskaźnikach ze stooq
 def company_indicators(stock_ticker):
     base_url = r'https://stooq.pl/q/g/?s='
@@ -433,3 +435,34 @@ def get_shareholders(stock_ticker):
             rows_data.append(row_values)
     return rows_data
 
+# Pobiera dane o finansach danej społki
+def get_financial_data(isin):
+    base_url = r'https://www.money.pl/gielda/spolki-gpw/'
+    page = requests.get(base_url+isin+',finanse.html')
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content , 'html.parser',from_encoding="utf-8")
+        table = soup.find_all(class_='fkmtpn-1')
+        financial_years = []
+        financial_data = []
+        for item in table:
+            data_table = item.find_all('tr', {"class":'fkmtpn-2'})
+            all_data_table = []
+            for val in data_table:
+                financial_data_item = []
+                td_head = val.find('td', {"class":'fkmtpn-5'})
+                td_values = val.find_all('td',{"class":'fkmtpn-6'})
+                td_years = val.find_all('td',{"class":'fkmtpn-4'})
+                for year in td_years:
+                    financial_years.append(year.getText())
+                if td_head:
+                    financial_data_item.append(td_head.getText())
+                    if td_values:
+                        temp_val = []
+                        for item in td_values:
+                            text = item.getText()
+                            temp_val.append(text.replace(u'\xa0', ' '))
+                        financial_data_item.append(temp_val)
+                all_data_table.append(financial_data_item)
+            financial_data.append(all_data_table)
+        return financial_years, financial_data
+            
