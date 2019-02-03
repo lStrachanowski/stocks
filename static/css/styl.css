@@ -13,7 +13,7 @@
     padding: 2%;
     justify-content: center;
     width: 100%;
-    background: rgba(81, 101, 99,0.5);
+    background: rgba(221, 238, 236, 0.5);
     color: rgb(255, 255, 255);
 }
 
@@ -185,7 +185,7 @@ a:hover{
 }
 
 a:visited{
-    color: #04aba3da;
+    color: #94a0b2;
 }
 
 .d-return{
