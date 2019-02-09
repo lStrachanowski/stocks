@@ -482,8 +482,11 @@ def transaction_data(stockval):
             code.write(r.content)
         print("Downloading " + stockval[:-4] + '.zip' + " finished")
         try:
-            shutil.rmtree(stock_directory)
-            os.mkdir(stock_directory)
+            if os.path.isdir(stock_directory):
+                shutil.rmtree(stock_directory)
+                os.mkdir(stock_directory)
+            else:
+                os.mkdir(stock_directory)
             with zipfile.ZipFile(file_name) as file_to_unzip:
                 file_to_unzip.extractall(stock_directory)
             if os.path.isfile(zip_stock_file):
@@ -492,4 +495,6 @@ def transaction_data(stockval):
             print("Something went wrong :(")
     except:
         print("Something went wrong :(")
+
+
 
