@@ -9,7 +9,7 @@ import plotly.offline as offline
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import plotly.io as pio
-
+import shutil
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import csv
@@ -26,7 +26,6 @@ file_name = url.split('/')[-1]
 file_name_newconnect = url_newconnect.split('/')[-1]
 
 directory = r"D:\\dev\python biznes\\trend comparison\\files\\"
-
 zip_file = r"D:\\dev\python biznes\\trend comparison\\"+url.split('/')[-1]
 zip_file_newconnect = r"D:\\dev\python biznes\\trend comparison\\" + url_newconnect.split('/')[-1]
 
@@ -68,6 +67,8 @@ def stock(stockval):
 
     # Pobiera dane o akcjonariacie
     shareholders = get_shareholders(ticker)
+
+    transaction_data(stockval)
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -466,3 +467,28 @@ def get_financial_data(isin):
             financial_data.append(all_data_table)
         return financial_years, financial_data
             
+# Pobiera dane o tranzakcjach na danym walorze 
+def transaction_data(stockval):
+    url = r'http://bossa.pl/pub/intraday/mstock/cgl/'
+    file_name = stockval[:-4] + '.zip'
+    full_url = url + file_name
+    zip_stock_file = r"D:\\dev\python biznes\\trend comparison\\"+file_name
+    stock_directory = r"D:\\dev\python biznes\\trend comparison\\stockdata\\"
+    try:
+        print("Downloading" + stockval[:-4] + '.zip')
+        r = requests.get(full_url)
+        with open(file_name , "wb") as code:
+            code.write(r.content)
+        print("Downloading " + stockval[:-4] + '.zip' + " finished")
+        try:
+            shutil.rmtree(stock_directory)
+            os.mkdir(stock_directory)
+            with zipfile.ZipFile(file_name) as file_to_unzip:
+                file_to_unzip.extractall(stock_directory)
+            if os.path.isfile(zip_stock_file):
+                os.remove(zip_stock_file)
+        except:
+            print("Something went wrong :(")
+    except:
+        print("Something went wrong :(")
+
