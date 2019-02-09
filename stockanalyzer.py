@@ -40,7 +40,7 @@ def index():
             return render_template('index.html', data_list=results)  
         else:
             return redirect(url_for('stock', stockval=request.form.get('stock_list_form')))
-    return render_template('index.html', data_list=stock_list )
+    return render_template('index.html', data_list=stock_list, show_tools=True )
 
 @app.route('/download' ,methods=['GET', 'POST'])
 def download():
@@ -68,6 +68,7 @@ def stock(stockval):
     # Pobiera dane o akcjonariacie
     shareholders = get_shareholders(ticker)
 
+    # Pobiera szczegółowe dane o transakcjach
     transaction_data(stockval)
 
     sma_100 = sma(stockval, 100)
