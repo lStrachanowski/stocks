@@ -13,6 +13,7 @@ import shutil
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import csv
+import numpy as np
 
 app = Flask(__name__)
 app.secret_key = "abcd"
@@ -28,7 +29,7 @@ file_name_newconnect = url_newconnect.split('/')[-1]
 directory = r"D:\\dev\python biznes\\trend comparison\\files\\"
 zip_file = r"D:\\dev\python biznes\\trend comparison\\"+url.split('/')[-1]
 zip_file_newconnect = r"D:\\dev\python biznes\\trend comparison\\" + url_newconnect.split('/')[-1]
-
+stock_directory = r"D:\\dev\python biznes\\trend comparison\\stockdata\\"
 stock_list = os.listdir(directory)
 
 @app.route('/' ,methods=['GET', 'POST'])
@@ -50,6 +51,10 @@ def download():
 
 @app.route('/<stockval>')
 def stock(stockval):
+
+    analyze_stock_transactions(stockval)
+
+
     # pobiera dane dla waloru
     main_df = stock_data(stockval,2,120)
     # ustala ticker dla danego waloru 
@@ -69,7 +74,7 @@ def stock(stockval):
     shareholders = get_shareholders(ticker)
 
     # Pobiera szczegółowe dane o transakcjach
-    transaction_data(stockval)
+    # transaction_data(stockval)
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -474,7 +479,6 @@ def transaction_data(stockval):
     file_name = stockval[:-4] + '.zip'
     full_url = url + file_name
     zip_stock_file = r"D:\\dev\python biznes\\trend comparison\\"+file_name
-    stock_directory = r"D:\\dev\python biznes\\trend comparison\\stockdata\\"
     try:
         print("Downloading" + stockval[:-4] + '.zip')
         r = requests.get(full_url)
@@ -497,4 +501,9 @@ def transaction_data(stockval):
         print("Something went wrong :(")
 
 
-
+def analyze_stock_transactions(stockval):
+    stock = stock_directory + stockval[:-4] + '.prn'
+    df = pd.read_csv(stock)
+    df.columns = ["ticker","zero","date","time","open","high","low","close","volume","nextzero"]
+    last_day =  df.loc[df["date"] == df.iloc[-1]["date"]]
+    
