@@ -38,10 +38,10 @@ def index():
         search_val = request.form.get('search_box')
         if search_val:
             results = [x for x in stock_list if search_val.upper() in x[:-4]]
-            return render_template('index.html', data_list=results)  
+            return render_template('index.html', data_list=results, show_tools=True)  
         else:
             return redirect(url_for('stock', stockval=request.form.get('stock_list_form')))
-    return render_template('index.html', data_list=stock_list, show_tools=True )
+    return render_template('index.html', data_list=stock_list )
 
 @app.route('/download' ,methods=['GET', 'POST'])
 def download():
@@ -51,9 +51,6 @@ def download():
 
 @app.route('/<stockval>')
 def stock(stockval):
-
-    analyze_stock_transactions(stockval)
-
 
     # pobiera dane dla waloru
     main_df = stock_data(stockval,2,120)
@@ -74,7 +71,9 @@ def stock(stockval):
     shareholders = get_shareholders(ticker)
 
     # Pobiera szczegółowe dane o transakcjach
-    # transaction_data(stockval)
+    transaction_data(stockval)
+
+    analyze_stock_transactions(stockval)
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -506,4 +505,14 @@ def analyze_stock_transactions(stockval):
     df = pd.read_csv(stock)
     df.columns = ["ticker","zero","date","time","open","high","low","close","volume","nextzero"]
     last_day =  df.loc[df["date"] == df.iloc[-1]["date"]]
-    
+    stock_values = last_day["close"].values
+    stock_volume = last_day["volume"].values
+    transactions_stats = {}
+    for i in range(len(stock_values)):
+        if transactions_stats.get(stock_values[i]):
+            transactions_stats[stock_values[i]] = transactions_stats[stock_values[i]] + stock_volume[i]
+        else:
+            transactions_stats[stock_values[i]] = stock_volume[i]
+    print(transactions_stats)
+        
+
