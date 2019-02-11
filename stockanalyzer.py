@@ -38,7 +38,7 @@ def index():
         search_val = request.form.get('search_box')
         if search_val:
             results = [x for x in stock_list if search_val.upper() in x[:-4]]
-            return render_template('index.html', data_list=results, show_tools=True)  
+            return render_template('index.html', data_list=results)  
         else:
             return redirect(url_for('stock', stockval=request.form.get('stock_list_form')))
     return render_template('index.html', data_list=stock_list )
@@ -73,7 +73,8 @@ def stock(stockval):
     # Pobiera szczegółowe dane o transakcjach
     transaction_data(stockval)
 
-    analyze_stock_transactions(stockval)
+    # Zwraca volumen akcji, który został nabyty po danej cenie. 
+    stock_prices = analyze_stock_transactions(stockval)
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)
@@ -171,7 +172,8 @@ def stock(stockval):
 
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
-    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data) 
+    , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
+    prices = stock_prices) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])
@@ -508,11 +510,16 @@ def analyze_stock_transactions(stockval):
     stock_values = last_day["close"].values
     stock_volume = last_day["volume"].values
     transactions_stats = {}
+    results = []
     for i in range(len(stock_values)):
         if transactions_stats.get(stock_values[i]):
             transactions_stats[stock_values[i]] = transactions_stats[stock_values[i]] + stock_volume[i]
         else:
             transactions_stats[stock_values[i]] = stock_volume[i]
-    print(transactions_stats)
+    for key, val in transactions_stats.items():
+        temp = [key,val]
+        results.append(temp)
+    results = sorted(results, key= lambda x : x[1], reverse= True)
+    return results
         
 

@@ -13,7 +13,7 @@
 <body>
     <div class="main-container">
         <div class="main-header"><a href="{{ url_for('index') }}">Analiza akcji</a></div>
-        {% if show_tools %}
+       
         <div class="main-tools-bar">
             <form method="POST" action="{{url_for('index')}}" class="width">
                     <input placeholder="Type stock" name="search_box"> <button class="search-btn" type="submit"> Search </button>
@@ -40,7 +40,7 @@
                     <button class="search-btn red-btn wig" type="submit" id="swig80">sWIG 80</button>
                 </form>
         </div>
-        {% endif %}
+        
         
         {% block content%}
         <div>
