@@ -323,20 +323,37 @@ a:visited{
 
 .stock-volume-container{
     display: flex;
-    flex-direction: column;
-    width: 10%;
+    flex-direction: row;
+    flex-wrap:  wrap;
+    width: 47%;
+    margin: 2%;
+    height: 330px;
 }
 
+.stock-volume-container-image{
+    height: 500px;
+}
 .stock-volume-items{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin: 5px;
     background-color: #ececec;
+    height: 30px;
+}
+
+.stock-volume-items-image{
+    height: 500px;
 }
 
 .stock-volume-items-style{
     margin: 5px;
     font-size: 20px;
     color: rgba(77, 84, 84, 0.923);
+}
+
+.volume-position{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

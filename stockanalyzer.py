@@ -41,7 +41,7 @@ def index():
             return render_template('index.html', data_list=results)  
         else:
             return redirect(url_for('stock', stockval=request.form.get('stock_list_form')))
-    return render_template('index.html', data_list=stock_list )
+    return render_template('index.html', data_list=stock_list, show_tools=True )
 
 @app.route('/download' ,methods=['GET', 'POST'])
 def download():
@@ -71,10 +71,28 @@ def stock(stockval):
     shareholders = get_shareholders(ticker)
 
     # Pobiera szczegółowe dane o transakcjach
-    transaction_data(stockval)
+    # transaction_data(stockval)
 
     # Zwraca volumen akcji, który został nabyty po danej cenie. 
     stock_prices = analyze_stock_transactions(stockval)
+    vol_x , vol_y = zip(*stock_prices)
+    print(vol_x)
+    print(vol_y)
+
+    vol_data = [go.Bar(
+            x=vol_y,
+            y=vol_x,
+            orientation = 'h'
+    )]
+
+    vol_layout = go.Layout(
+    yaxis=dict(
+        dtick=0.25,
+    )
+)
+    vol_fig = go.Figure(data=vol_data, layout = vol_layout)
+    pio.write_image(vol_fig, 'static/daily_volume.png',width=700, height=500)
+    
 
     sma_100 = sma(stockval, 100)
     sma_200 = sma(stockval, 200)

@@ -26,6 +26,7 @@
                     </select>
                     <button type="submit" class="search-btn">Go</button>
             </form>
+            {% if show_tools %}
                     <button type="submit" class="search-btn red-btn" id="download">Download</button>
                     <form  method="POST" action="{{url_for('data_analyze')}}">
                         <button type="submit" class="search-btn red-btn" id="analyze">Analyze</button>
@@ -39,6 +40,7 @@
                 <form  method="POST" action="{{url_for('indecies', val='swig80')}}">  
                     <button class="search-btn red-btn wig" type="submit" id="swig80">sWIG 80</button>
                 </form>
+            {% endif %}
         </div>
         
         
