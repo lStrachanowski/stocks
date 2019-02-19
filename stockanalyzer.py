@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup
 import csv
 import numpy as np
 
+pio.orca.config.executable = r'C:\Users\Tomasy\AppData\Local\Programs\orca\orca.exe'
+
 app = Flask(__name__)
 app.secret_key = "abcd"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -22,6 +24,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 url = "http://bossa.pl/pub/metastock/mstock/mstall.zip"
 url_newconnect = "http://bossa.pl/pub/newconnect/mstock/mstncn.zip"
 
+# plotly.io.orca.config.executable = "C:\\Users\\Tomasy\\AppData\\Local\\Programs\\orca"
 
 file_name = url.split('/')[-1]
 file_name_newconnect = url_newconnect.split('/')[-1]
@@ -71,7 +74,7 @@ def stock(stockval):
     shareholders = get_shareholders(ticker)
 
     # Pobiera szczegółowe dane o transakcjach
-    # transaction_data(stockval)
+    transaction_data(stockval)
 
     # Zwraca volumen akcji, który został nabyty po danej cenie. 
     stock_prices = analyze_stock_transactions(stockval)
