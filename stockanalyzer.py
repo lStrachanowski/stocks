@@ -249,6 +249,11 @@ def indecies(val):
     if request.method == 'GET':
         return render_template('indecies.html',data_list=stock_list, results=wig_20_val)
 
+
+@app.route('/marketdata',methods=['GET', 'POST'])
+def market_data():
+    data = download_marketdata()
+    return render_template('marketdata.html',data_list=stock_list, data=data)
 # Pobiera dane z bossa.pl wypakowuje i usuwa plik zip z systemu
 def download_file():
     try:
@@ -544,3 +549,18 @@ def analyze_stock_transactions(stockval):
     return results
         
 
+def download_marketdata():
+    base_url = r'https://stooq.pl/t/bt/'
+    page = requests.get(base_url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        table = soup.find_all('tbody', id='r')
+        rows = table[0].find_all('tr')
+        data = []
+        for row in rows:
+            elements = row.find_all('td')
+            table_row = []
+            for item in elements:
+               table_row.append(item.getText())
+            data.append(table_row)
+        return data

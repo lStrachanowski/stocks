@@ -357,3 +357,35 @@ a:visited{
     flex-direction: row;
     align-items: center;
 }
+
+.market-data-container{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.market-data-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.market-data-item-style{
+    width: 10%;
+    margin: 10px 3px;
+}
+
+.market-data-item-style-header{
+    margin: 10px 0px;
+    background-color: #ececec;
+}
+
+.market-data-item-style:nth-child(1){
+    font-weight: 600;
+    color:rgba(77, 84, 84, 0.923);
+}
+.market-data-item-style:nth-child(2){
+    font-weight: 600;
+    color:rgba(77, 84, 84, 0.923);
+}
+
