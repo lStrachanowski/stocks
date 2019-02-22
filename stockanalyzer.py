@@ -217,7 +217,7 @@ def data_analyze():
                 percent_diff = ((df.iloc[-1]['<VOL>'] / vol_mean['<VOL>']) - 1 )*100
                 if (curr_vol > min_vol) :
                     change = daily_return(val)
-                    # print(val, curr_vol)
+                    print(val, curr_vol)
                     res.append([val,ticker, df.iloc[-1]['<VOL>'],vol_mean['<VOL>'].round(0), round(percent_diff,2),round(change.iloc[-1]['<CLOSE>'],2) ])
                 else:
                     print('za mały obrót')    
@@ -274,7 +274,6 @@ def download_file():
         with open (file_name_newconnect, "wb") as code_newconnect:
             code_newconnect.write(r_n.content)
         print('Downloading New Connect finished')
-
     except:
         print("something went wrong :(")
 
@@ -293,6 +292,15 @@ def unzip_file():
         print('Newconnect files unziped')
         if os.path.isfile(zip_file_newconnect):
             os.remove(zip_file_newconnect) 
+        # Usuwa pliki ze starymi akcjami  
+        print('Start to delete old files')
+        with open('oldstocks.csv', newline='') as file:
+            reader = csv.reader(file, delimiter=' ')
+            for item in list(reader)[:-1]:
+                file_path = r"D:\\dev\\python biznes\\trend comparison\\files\\"+item[0]
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        print('Old files deleted')   
     except:
         print("something went wrong :(")
 
