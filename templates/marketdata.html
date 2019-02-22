@@ -65,4 +65,47 @@
     </div>
     {% endfor %}
 </div>
+<br>
+
+<div class="market-data-container">
+    <div class="book-header">
+        Rejestr pozycji krótkich 
+    </div>
+    <div class="market-data-item market-data-item-style-header">
+        <div class="market-data-item-style">
+            Posiadacz pozycji krótkiej 
+        </div>
+        <div class="market-data-item-style">
+            Nazwa papieru 
+        </div>
+        <div class="market-data-item-style">
+            ISIN 
+        </div>
+        <div class="market-data-item-style">
+            Pozycja krótka netto (%) 
+        </div>
+        <div class="market-data-item-style">
+            Data obliczenia pozycji 
+        </div>
+    </div>
+    {% for value in short_sale %}
+    <div class="market-data-item">
+        <div class="market-data-item-style">
+            {{value[1]}}
+        </div>
+        <div class="market-data-item-style">
+            {{value[2]}}
+        </div>
+        <div class="market-data-item-style">
+            {{value[3]}}
+        </div>
+        <div class="market-data-item-style">
+            {{value[4]}}
+        </div>
+        <div class="market-data-item-style">
+            {{value[5]}}
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

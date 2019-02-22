@@ -259,7 +259,8 @@ def indecies(val):
 @app.route('/marketdata',methods=['GET', 'POST'])
 def market_data():
     data = download_marketdata()
-    return render_template('marketdata.html',data_list=stock_list, data=data)
+    short_sale_data = short_sale()
+    return render_template('marketdata.html',data_list=stock_list, data=data, short_sale= short_sale_data)
 # Pobiera dane z bossa.pl wypakowuje i usuwa plik zip z systemu
 def download_file():
     try:
@@ -578,3 +579,19 @@ def download_marketdata():
                table_row.append(item.getText())
             data.append(table_row)
         return data
+
+def short_sale():
+    base_url = r'https://rss.knf.gov.pl/RssOuterView/faces/hspsList.xhtml'
+    page = requests.get(base_url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        table = soup.find_all('tbody')
+        rows = table[0].find_all('tr')
+        short_sale_data = []
+        for val in rows:
+            temp = val.find_all('td')
+            temp_val = []
+            for data in temp:
+                temp_val.append(data.getText())
+            short_sale_data.append(temp_val)
+        return short_sale_data
