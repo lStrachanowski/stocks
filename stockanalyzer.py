@@ -14,6 +14,7 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import csv
 import numpy as np
+import csv
 
 pio.orca.config.executable = r'C:\Users\Tomasy\AppData\Local\Programs\orca\orca.exe'
 
@@ -200,6 +201,7 @@ def stock(stockval):
 @app.route('/analyze',methods=['GET', 'POST'])
 def data_analyze():
     if request.method == 'POST':
+        # temp_list = []
         res = []
         for val in stock_list:
             ticker = get_ticker(val[:-4])
@@ -215,13 +217,17 @@ def data_analyze():
                 percent_diff = ((df.iloc[-1]['<VOL>'] / vol_mean['<VOL>']) - 1 )*100
                 if (curr_vol > min_vol) :
                     change = daily_return(val)
-                    print(val, curr_vol)
+                    # print(val, curr_vol)
                     res.append([val,ticker, df.iloc[-1]['<VOL>'],vol_mean['<VOL>'].round(0), round(percent_diff,2),round(change.iloc[-1]['<CLOSE>'],2) ])
                 else:
                     print('za mały obrót')    
             except:
+                temp_list.append(val)
                 print('Brak wartości w polu') 
         res.sort(key = lambda x : x[4], reverse=True)
+        # with open('oldstocks.csv','w') as write:
+        #     writer = csv.writer(write,delimiter="\n")
+        #     writer.writerow(temp_list)
         return render_template('analyze.html',data_list=stock_list, results=res)
     return render_template('index.html')
 
