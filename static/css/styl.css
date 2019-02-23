@@ -389,3 +389,17 @@ a:visited{
     color:rgba(77, 84, 84, 0.923);
 }
 
+.company-data{
+    display: flex;
+    flex-direction: column;
+    margin: 1%;
+    font-size: 18px;
+    color: rgba(77, 84, 84, 0.923);
+}
+
+.company-data:nth-child(0){
+    width: 40%;
+}
+.company-data:nth-child(1){
+    width: 60%;
+}

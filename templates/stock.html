@@ -5,7 +5,23 @@
         <div class="stock_header">
                 {{stock_name}} : {{close_value}} PLN ( {{daily_return }} %)
         </div>
+        
         <img src="{{ url_for('static', filename='chart.png')}}" class="candle-img">
+        <div class="book-header">
+                        Opis
+        </div>
+        <div class="volume-position">
+                <div class="company-data">
+                        {% for detail in details[:7] %}
+                                <div>{{detail}}</div>
+                        {% endfor %}
+                </div>
+                <div class="company-data">
+                        {% for detail in details[7:] %}
+                                <div>{{detail}}</div>
+                        {% endfor %}
+                </div>
+        </div>
         <div class="book-header">
                 Wolumen dla każdej ceny
         </div>

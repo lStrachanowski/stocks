@@ -74,6 +74,9 @@ def stock(stockval):
     # Pobiera dane o akcjonariacie
     shareholders = get_shareholders(ticker)
 
+    # Pobiera opis firmy
+    company_details = company_info(ticker)
+    
     # Pobiera szczegółowe dane o transakcjach
     transaction_data(stockval)
 
@@ -195,7 +198,7 @@ def stock(stockval):
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
     , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
-    prices = stock_prices) 
+    prices = stock_prices, details = company_details) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])
@@ -595,3 +598,24 @@ def short_sale():
                 temp_val.append(data.getText())
             short_sale_data.append(temp_val)
         return short_sale_data
+
+def company_info(stock_ticker):
+    base_url = r'https://stooq.pl/q/p/?s='
+    page = requests.get(base_url+stock_ticker)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        full_company_name = soup.find('font', id='f14')
+        table = soup.find('font', id='f13')
+        company_details = []
+        company_details.append(full_company_name.getText())
+        table_converted =list(table)
+        company_details.append(table_converted[0])
+        company_details.append(table_converted[2])
+        company_details.append(table_converted[4])
+        company_details.append(table_converted[6])
+        for i in enumerate(table_converted[9]):
+            company_details.append(i[1])
+        for j in enumerate(table_converted[12]):
+            company_details.append(j[1])
+        company_details.append(table_converted[21])
+        return company_details
