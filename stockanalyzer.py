@@ -279,7 +279,7 @@ def download_file():
             code_newconnect.write(r_n.content)
         print('Downloading New Connect finished')
     except:
-        print("something went wrong :(")
+        print("something went wrong :( with downloading")
 
 # Wypakowuje dane z pliku zip      
 def unzip_file():
@@ -317,49 +317,50 @@ def unzip_file():
                     os.remove(other_files)
         print('Other files deleted')
     except:
-        print("something went wrong :(")
+        print("something went wrong :( with unzipping file")
 
 # Pobiera dziesięć zleceń kupna i sprzedaży na podstawie tickera danych akcji 
 def order_book(ticker):
     base_url = r'https://gragieldowa.pl/spolka_arkusz_zl/spolka/'
-    page = requests.get(base_url+ticker)
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        table = soup.find_all('tr')
-        headers = []
-        buy = []
-        sell = []
-        for i in range(4,len(table)-29):
-            if table[i].find('th'):
-                headers.append(i)
-        if headers:
-            for val_buy in range(headers[0]+1,headers[1]):
-                buy_row_member = []
-                buy_row_member.append(table[val_buy].find('td').string)
-                sibling = (table[val_buy].find('td').next_siblings)
-                for s in sibling:
-                    buy_row_member.append(s.string)
-                buy.append(buy_row_member)
-            for val_sell in range(headers[1]+1,len(table)-29):
-                sell_row_member = []
-                sell_row_member.append(table[val_sell].find('td').string)
-                sibling = (table[val_sell].find('td').next_siblings)
-                for s in sibling:
-                    sell_row_member.append(s.string)
-                sell.append(sell_row_member)  
-            if len(buy) < 11:
-                buy = buy[:len(buy)-1]
+    if ticker:
+        page = requests.get(base_url+ticker)
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            table = soup.find_all('tr')
+            headers = []
+            buy = []
+            sell = []
+            for i in range(4,len(table)-29):
+                if table[i].find('th'):
+                    headers.append(i)
+            if headers:
+                for val_buy in range(headers[0]+1,headers[1]):
+                    buy_row_member = []
+                    buy_row_member.append(table[val_buy].find('td').string)
+                    sibling = (table[val_buy].find('td').next_siblings)
+                    for s in sibling:
+                        buy_row_member.append(s.string)
+                    buy.append(buy_row_member)
+                for val_sell in range(headers[1]+1,len(table)-29):
+                    sell_row_member = []
+                    sell_row_member.append(table[val_sell].find('td').string)
+                    sibling = (table[val_sell].find('td').next_siblings)
+                    for s in sibling:
+                        sell_row_member.append(s.string)
+                    sell.append(sell_row_member)  
+                if len(buy) < 11:
+                    buy = buy[:len(buy)-1]
+                else:
+                    buy = buy[0:10]
+                if len(sell) < 11:
+                    sell = sell[:len(sell)-1]
+                else:
+                    sell = sell[0:10]
+                return (buy, sell)
             else:
-                buy = buy[0:10]
-            if len(sell) < 11:
-                sell = sell[:len(sell)-1]
-            else:
-                sell = sell[0:10]
-            return (buy, sell)
+                return ([0], [0])
         else:
-            return ([0], [0])
-    else:
-        print('something went wrong')
+            print('something went wrong with book order scrapping')
 
 # Na podstawie nazwy spółki zwraca jej ticker
 def get_ticker(stock_name):
@@ -430,29 +431,30 @@ def bollinger(stockval):
 # Pobiera dane o wskaźnikach ze stooq
 def company_indicators(stock_ticker):
     base_url = r'https://stooq.pl/q/g/?s='
-    page = requests.get(base_url+stock_ticker)
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        table = soup.find_all('tr', id='f13')
-        company_data = []
-        for tab in table:
-            td = tab.find_all('td')
-            temp = []
-            for i in td:
-                temp.append(i.getText())
-            company_data.append(temp)
-        cz = soup.find_all('table', id='t1')
-        cwk_val = cz[1].find_all('td', id='f13')
-        cz_val = cz[0].find_all('td', id='f13')
-        if cwk_val:
-            company_data.append(['C/WK',cwk_val[-1].getText()])
-        else:
-            company_data.append(['C/WK','N.A'])
-        if cz_val:
-            company_data.append(['C/Z',cz_val[0].getText()])
-        else:
-            company_data.append(['C/Z','N.A'])
-        return company_data
+    if stock_ticker:
+        page = requests.get(base_url+stock_ticker)
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            table = soup.find_all('tr', id='f13')
+            company_data = []
+            for tab in table:
+                td = tab.find_all('td')
+                temp = []
+                for i in td:
+                    temp.append(i.getText())
+                company_data.append(temp)
+            cz = soup.find_all('table', id='t1')
+            cwk_val = cz[1].find_all('td', id='f13')
+            cz_val = cz[0].find_all('td', id='f13')
+            if cwk_val:
+                company_data.append(['C/WK',cwk_val[-1].getText()])
+            else:
+                company_data.append(['C/WK','N.A'])
+            if cz_val:
+                company_data.append(['C/Z',cz_val[0].getText()])
+            else:
+                company_data.append(['C/Z','N.A'])
+            return company_data
 
 # Oblicza średnią kroczącą
 def sma(stockval, value):
@@ -468,68 +470,71 @@ def sma(stockval, value):
 # Pobiera komunikaty o danej spółce
 def get_news(isin):
     base_url = r'https://www.money.pl/gielda/spolki-gpw/'
-    page = requests.get(base_url+isin+',emitent,1.html')
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        table = soup.find_all('tr', {"class":'npeb8d-3'})
-        news = []
-        for val in table:
-            td = val.find_all('td')
-            data = []
-            for v in td:
-                data.append(v.getText())
-                if v.find('a'):
-                    link = r'https://www.money.pl' + v.find('a')['href']
-                    data.append(link)
-            news.append(data)
-        return news[1:10:]
+    if isin:
+        page = requests.get(base_url+isin+',emitent,1.html')
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            table = soup.find_all('tr', {"class":'npeb8d-3'})
+            news = []
+            for val in table:
+                td = val.find_all('td')
+                data = []
+                for v in td:
+                    data.append(v.getText())
+                    if v.find('a'):
+                        link = r'https://www.money.pl' + v.find('a')['href']
+                        data.append(link)
+                news.append(data)
+            return news[1:10:]
 
 # Pobiera dane o akcjonariacie
 def get_shareholders(stock_ticker):
     base_url = r'https://stooq.pl/q/h/?s='
-    page = requests.get(base_url+stock_ticker)
-    rows_data = []
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        table = soup.find_all('table',class_="fth1")
-        rows = table[0].find_all('tr',id='r')
-        for v in rows:
-            row_values = []
-            for item in v.findChildren('td'):
-                row_values.append(item.getText())
-            rows_data.append(row_values)
-    return rows_data
+    if stock_ticker:
+        page = requests.get(base_url+stock_ticker)
+        rows_data = []
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            table = soup.find_all('table',class_="fth1")
+            rows = table[0].find_all('tr',id='r')
+            for v in rows:
+                row_values = []
+                for item in v.findChildren('td'):
+                    row_values.append(item.getText())
+                rows_data.append(row_values)
+        return rows_data
 
 # Pobiera dane o finansach danej społki
 def get_financial_data(isin):
     base_url = r'https://www.money.pl/gielda/spolki-gpw/'
-    page = requests.get(base_url+isin+',finanse.html')
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content , 'html.parser',from_encoding="utf-8")
-        table = soup.find_all(class_='fkmtpn-1')
-        financial_years = []
-        financial_data = []
-        for item in table:
-            data_table = item.find_all('tr', {"class":'fkmtpn-2'})
-            all_data_table = []
-            for val in data_table:
-                financial_data_item = []
-                td_head = val.find('td', {"class":'fkmtpn-5'})
-                td_values = val.find_all('td',{"class":'fkmtpn-6'})
-                td_years = val.find_all('td',{"class":'fkmtpn-4'})
-                for year in td_years:
-                    financial_years.append(year.getText())
-                if td_head:
-                    financial_data_item.append(td_head.getText())
-                    if td_values:
-                        temp_val = []
-                        for item in td_values:
-                            text = item.getText()
-                            temp_val.append(text.replace(u'\xa0', ' '))
-                        financial_data_item.append(temp_val)
-                all_data_table.append(financial_data_item)
-            financial_data.append(all_data_table)
-        return financial_years, financial_data
+    if isin:
+        page = requests.get(base_url+isin+',finanse.html')
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content , 'html.parser',from_encoding="utf-8")
+            table = soup.find_all(class_='fkmtpn-1')
+            financial_years = []
+            financial_data = []
+            for item in table:
+                data_table = item.find_all('tr', {"class":'fkmtpn-2'})
+                all_data_table = []
+                for val in data_table:
+                    financial_data_item = []
+                    td_head = val.find('td', {"class":'fkmtpn-5'})
+                    td_values = val.find_all('td',{"class":'fkmtpn-6'})
+                    td_years = val.find_all('td',{"class":'fkmtpn-4'})
+                    for year in td_years:
+                        financial_years.append(year.getText())
+                    if td_head:
+                        financial_data_item.append(td_head.getText())
+                        if td_values:
+                            temp_val = []
+                            for item in td_values:
+                                text = item.getText()
+                                temp_val.append(text.replace(u'\xa0', ' '))
+                            financial_data_item.append(temp_val)
+                    all_data_table.append(financial_data_item)
+                financial_data.append(all_data_table)
+            return financial_years, financial_data
             
 # Pobiera dane o tranzakcjach na danym walorze 
 def transaction_data(stockval):
@@ -554,9 +559,9 @@ def transaction_data(stockval):
             if os.path.isfile(zip_stock_file):
                 os.remove(zip_stock_file)
         except:
-            print("Something went wrong :(")
+            print("Something went wrong :( with uzipping stock zip")
     except:
-        print("Something went wrong :(")
+        print("Something went wrong :( with downloading stock file")
 
 
 def analyze_stock_transactions(stockval):
@@ -614,23 +619,24 @@ def short_sale():
 
 def company_info(stock_ticker):
     base_url = r'https://stooq.pl/q/p/?s='
-    page = requests.get(base_url+stock_ticker)
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        full_company_name = soup.find('font', id='f14')
-        table = soup.find('font', id='f13')
-        company_details = []
-        company_details.append(full_company_name.getText())
-        table_converted =list(table)
-        company_details.append(table_converted[0])
-        company_details.append(table_converted[2])
-        company_details.append(table_converted[4])
-        company_details.append(table_converted[6])
-        for i in enumerate(table_converted[9]):
-            company_details.append(i[1])
-        for j in enumerate(table_converted[12]):
-            company_details.append(j[1])
-        company_details.append(table_converted[21])
-        return company_details
+    if stock_ticker:
+        page = requests.get(base_url+stock_ticker)
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            full_company_name = soup.find('font', id='f14')
+            table = soup.find('font', id='f13')
+            company_details = []
+            company_details.append(full_company_name.getText())
+            table_converted =list(table)
+            company_details.append(table_converted[0])
+            company_details.append(table_converted[2])
+            company_details.append(table_converted[4])
+            company_details.append(table_converted[6])
+            for i in enumerate(table_converted[9]):
+                company_details.append(i[1])
+            for j in enumerate(table_converted[12]):
+                company_details.append(j[1])
+            company_details.append(table_converted[21])
+            return company_details
 
 # def price_book_value():
