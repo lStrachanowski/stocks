@@ -225,7 +225,7 @@ def data_analyze():
                 else:
                     print('za mały obrót')    
             except:
-                temp_list.append(val)
+                # temp_list.append(val)
                 print('Brak wartości w polu') 
         res.sort(key = lambda x : x[4], reverse=True)
         # with open('oldstocks.csv','w') as write:
@@ -304,7 +304,18 @@ def unzip_file():
                 file_path = r"D:\\dev\\python biznes\\trend comparison\\files\\"+item[0]
                 if os.path.isfile(file_path):
                     os.remove(file_path)
-        print('Old files deleted')   
+        print('Old files deleted')
+        print('Deleting other files')
+        current_stocks = csv.DictReader(open('stock_tickers_nowy.csv'), delimiter=';')
+        ticker_list = []
+        for v in current_stocks:
+            ticker_list.append(v['ticker'])
+        for file in os.listdir(directory):
+            if get_ticker(file[:-4]) not in ticker_list:
+                other_files= r"D:\\dev\\python biznes\\trend comparison\\files\\"+file
+                if os.path.isfile(other_files):
+                    os.remove(other_files)
+        print('Other files deleted')
     except:
         print("something went wrong :(")
 
@@ -383,14 +394,16 @@ def stock_data(stockval,option,days):
     df_wig20 = df_wig20.rename(columns={'<CLOSE>':'WIG20'})
     main_df = main_df.join(df_wig20)
     main_df = main_df.dropna()
-    df_temp = pd.read_csv(r'D:\\dev\python biznes\\trend comparison\\files\\{}'.format(stockval), index_col='<DTYYYYMMDD>', parse_dates=True, usecols=['<DTYYYYMMDD>','<OPEN>','<HIGH>','<LOW>','<CLOSE>','<VOL>'], na_values=['nan'],encoding = "ISO-8859-1")
-    main_df = main_df.join(df_temp)
-    main_df = main_df.dropna()
-    if option == 1:
-        main_df = main_df.iloc[:,1:5]
-    if option == 2:
-        main_df = main_df.iloc[:,1:6]
-    return main_df
+    file_path = r'D:\\dev\python biznes\\trend comparison\\files\\{}'.format(stockval)
+    if os.path.isfile(file_path):
+        df_temp = pd.read_csv(file_path , index_col='<DTYYYYMMDD>', parse_dates=True, usecols=['<DTYYYYMMDD>','<OPEN>','<HIGH>','<LOW>','<CLOSE>','<VOL>'], na_values=['nan'],encoding = "ISO-8859-1")
+        main_df = main_df.join(df_temp)
+        main_df = main_df.dropna()
+        if option == 1:
+            main_df = main_df.iloc[:,1:5]
+        if option == 2:
+            main_df = main_df.iloc[:,1:6]
+        return main_df
 
 # Dzienny zwrot z danego waloru
 def daily_return(stockval):
@@ -619,3 +632,5 @@ def company_info(stock_ticker):
             company_details.append(j[1])
         company_details.append(table_converted[21])
         return company_details
+
+# def price_book_value():
