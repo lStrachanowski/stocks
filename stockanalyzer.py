@@ -52,6 +52,11 @@ def download():
      download_file()
      unzip_file()
      return "Database updated"
+    
+@app.route('/bookvalue',methods=['GET', 'POST'])
+def bookvalue():
+    return render_template('bookvalue.html', data_list=stock_list, bookvalues=price_book_value() )
+
 
 @app.route('/<stockval>')
 def stock(stockval):
@@ -639,4 +644,18 @@ def company_info(stock_ticker):
             company_details.append(table_converted[21])
             return company_details
 
-# def price_book_value():
+def price_book_value():
+    data = {}
+    results = []
+    for item in stock_list:
+        try:
+            data[get_ticker(item[:-4])] = company_indicators(get_ticker(item[:-4]))
+            val = company_indicators(get_ticker(item[:-4]))
+            if val[14][0] == 'C/WK' and val[14][1] != 'N.A':
+                print([item[:-4],get_ticker(item[:-4]) ,float(val[14][1])])
+                results.append([item[:-4],get_ticker(item[:-4]) ,float(val[14][1])])
+        except:
+            print("Problem with {}".format(item))
+    results.sort(key = lambda x: x[2])
+    return results
+    

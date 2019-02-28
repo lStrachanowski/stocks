@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<div class="market-data-container">
+    <div class="book-header">
+        Cena wartość księgowa
+    </div>
+    <div class="market-data-item market-data-item-style-header">
+        <div class="market-data-item-style">
+            Nazwa
+        </div>
+        <div class="market-data-item-style">
+            Ticker
+        </div>
+        <div class="market-data-item-style">
+            C/WK
+        </div>
+    </div>
+    {% for value in bookvalues %}
+    <div class="market-data-item">
+        <div class="market-data-item-style">
+            {{value[0]}}
+        </div>
+        <div class="market-data-item-style">
+            <a href="https://stooq.pl/q/?s={{value[0]}}">{{value[1]}}</a>
+        </div>
+        <div class="market-data-item-style">
+            {{value[2]}}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
