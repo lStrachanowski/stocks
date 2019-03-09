@@ -327,7 +327,7 @@ a:visited{
     flex-wrap:  wrap;
     width: 47%;
     margin: 2%;
-    height: 330px;
+    /* height: 330px; */
 }
 
 .stock-volume-container-image{

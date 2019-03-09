@@ -5,20 +5,20 @@
         <div class="stock_header">
                 {{stock_name}} : {{close_value}} PLN ( {{daily_return }} %)
         </div>
-        
+
         <img src="{{ url_for('static', filename='chart.png')}}" class="candle-img">
         <div class="book-header">
-                        Opis
+                Opis
         </div>
         <div class="volume-position">
                 <div class="company-data">
                         {% for detail in details[:7] %}
-                                <div>{{detail}}</div>
+                        <div>{{detail}}</div>
                         {% endfor %}
                 </div>
                 <div class="company-data">
                         {% for detail in details[7:] %}
-                                <div>{{detail}}</div>
+                        <div>{{detail}}</div>
                         {% endfor %}
                 </div>
         </div>
@@ -64,10 +64,8 @@
                         </table>
                 </div>
         </div>
+
         <div class="rows-container">
-
-
-
                 <div class="news-container">
                         <div class="book-header">
                                 Komunikaty
@@ -83,7 +81,7 @@
 
                 </div>
 
-                <div class="news-container">
+                 <div class="news-container">
                         <div class="book-header">
                                 Dane finansowe
                         </div>
@@ -114,13 +112,9 @@
                                         {% endfor %}
                                 </div>
                         </div>
-                </div>
+                </div> 
 
         </div>
-
-
-
-
 
 
         <div class="tables-container">

@@ -76,6 +76,56 @@ def stock(stockval):
     # Pobiera dane fiansowe
     financial_data = get_financial_data(get_isin(stockval[:-4]))
 
+    gross_profit = []
+    net_profit = []
+    # zysk brutto netto dla wykresu 
+    dates = [x for x in financial_data[0] if x]
+    for i in range(0,2):
+        for val in  financial_data[1][i]:
+            if len(val) > 0 :
+                if val[0] == "Zysk (strata) brutto":
+                    gross_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                elif val[0] == "Zysk (strata) netto":
+                    net_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
+
+    profit_data_net_q = go.Bar(
+        x=dates[0:4], 
+        y=net_profit[0],
+        name='net'
+    )
+
+    profit_data_gross_q = go.Bar(
+        x=dates[0:4], 
+        y=gross_profit[0],
+        name='gross'
+    )
+    
+    profit_layout = go.Layout(
+    barmode='group'
+    )
+
+    profit_data_q = [profit_data_net_q,profit_data_gross_q ] 
+    profit_fig_q = go.Figure(data=profit_data_q, layout=profit_layout)
+    pio.write_image(profit_fig_q, 'static/profits_q.png',width=600, height=400)
+
+    profit_data_net_y = go.Bar(
+        x=dates[4:8], 
+        y=net_profit[1],
+        name='net'
+    )
+
+    profit_data_gross_y = go.Bar(
+        x=dates[4:8], 
+        y=gross_profit[1],
+        name='gross'
+    )
+
+    profit_data_y = [profit_data_net_y, profit_data_gross_y] 
+    profit_fig_y = go.Figure(data=profit_data_y, layout=profit_layout)
+    pio.write_image(profit_fig_y, 'static/profits_y.png',width=600, height=400)
+    
+
+
     # Pobiera dane o akcjonariacie
     shareholders = get_shareholders(ticker)
 
@@ -88,8 +138,6 @@ def stock(stockval):
     # Zwraca volumen akcji, który został nabyty po danej cenie. 
     stock_prices = analyze_stock_transactions(stockval)
     vol_x , vol_y = zip(*stock_prices)
-    print(vol_x)
-    print(vol_y)
 
     vol_data = [go.Bar(
             x=vol_y,
@@ -205,6 +253,10 @@ def stock(stockval):
     , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
     prices = stock_prices, details = company_details) 
 
+    # return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
+    # , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, shareholder = shareholders, ticker=ticker, 
+    # prices = stock_prices, details = company_details) 
+
 
 @app.route('/analyze',methods=['GET', 'POST'])
 def data_analyze():
@@ -217,7 +269,7 @@ def data_analyze():
             # średni wolumen
             vol_mean = df[['<VOL>']].mean() 
             # minimalny wolumen
-            min_vol = 80000
+            min_vol = 40000
             # wartość wolumenu
             try:
                 # wartość ostatniego wolumenu 
