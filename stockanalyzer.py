@@ -79,7 +79,8 @@ def stock(stockval):
     gross_profit = []
     net_profit = []
     sales = []
-    # zysk brutto netto dla wykresu 
+    debt = []
+    capital = []
     dates = [x for x in financial_data[0] if x]
     for i in range(0,2):
         for val in  financial_data[1][i]:
@@ -90,6 +91,11 @@ def stock(stockval):
                     net_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
                 elif val[0] == "Przychody netto ze sprzedaży produktów, towarów i materiałów":
                     sales.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                elif val[0] == "Zobowiązania i rezerwy na zobowiązania":
+                    debt.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                elif val[0] == "Kapitał własny":
+                    capital.append([int("".join(x.split()))*1000  for x in val[1] if x])
+
 
     years = dates[4:8]
     profit_data_net_q = go.Bar(
@@ -149,6 +155,39 @@ def stock(stockval):
         pio.write_image(fig_sales, 'static/sales_y.png',width=600, height=400)
     else:
         sales_status = False
+    if len(debt) > 0:
+        debt_status = True
+        debt_q = [go.Bar(
+        x=dates[0:4], 
+        y=debt[0]
+        )]
+        fig_sales = go.Figure(data=debt_q)
+        pio.write_image(fig_sales, 'static/debt_q.png',width=600, height=400)
+        debt_y = [go.Bar(
+        x=years, 
+        y=debt[1]
+        )]
+        fig_sales = go.Figure(data=debt_y, layout=layout_reversed)
+        pio.write_image(fig_sales, 'static/debt_y.png',width=600, height=400)
+    else:
+        debt_status = False
+
+    if len(capital) > 0:
+        capital_status = True
+        capital_q = [go.Bar(
+        x=dates[0:4], 
+        y=capital[0]
+        )]
+        fig_sales = go.Figure(data=capital_q)
+        pio.write_image(fig_sales, 'static/capital_q.png',width=600, height=400)
+        capital_y = [go.Bar(
+        x=years, 
+        y=capital[1]
+        )]
+        fig_sales = go.Figure(data=capital_y, layout=layout_reversed)
+        pio.write_image(fig_sales, 'static/capital_y.png',width=600, height=400)
+    else:
+        capital_status = False
 
 
 
@@ -278,7 +317,7 @@ def stock(stockval):
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
     , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
-    prices = stock_prices, details = company_details, sales_status=sales_status) 
+    prices = stock_prices, details = company_details, sales_status=sales_status, debt_status=debt_status, capital_status=capital_status) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])

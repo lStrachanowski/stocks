@@ -158,6 +158,49 @@
                 </div>
                 {% endif %}
 
+                {% if debt_status %}
+                <div>
+                        <div class="book-header">
+                                Zobowiązania i rezerwy na zobowiązania kwartalne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='debt_q.png')}}">
+                        </div>
+
+                </div>
+                <div>
+                        <div class="book-header">
+                                Zobowiązania i rezerwy na zobowiązania roczne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='debt_y.png')}}">
+                        </div>
+
+                </div>
+                {% endif %}
+                {% if capital_status %}
+                <div>
+                        <div class="book-header">
+                                Kapitał własny(kwartał)
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='capital_q.png')}}">
+                        </div>
+
+                </div>
+                <div>
+                        <div class="book-header">
+                                Kapitał własny (roczne)
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='capital_y.png')}}">
+                        </div>
+
+                </div>
+                {% endif %}
+
+
+
         </div>
 
         <div class="tables-container">
