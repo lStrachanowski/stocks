@@ -117,7 +117,7 @@
         </div>
 
         <div class="financial-chart-container">
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Zyski kwartalne
                         </div>
@@ -127,7 +127,7 @@
 
                 </div>
                 {% if sales_status %}
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Przychody kwartalne
                         </div>
@@ -137,7 +137,7 @@
 
                 </div>
                 {% endif %}
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Zyski roczne
                         </div>
@@ -147,7 +147,7 @@
 
                 </div>
                 {% if sales_status %}
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Przychody roczne
                         </div>
@@ -159,18 +159,18 @@
                 {% endif %}
 
                 {% if debt_status %}
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
-                                Zobowiązania i rezerwy na zobowiązania kwartalne
+                                Zobowiązania i rezerwy na zobowiązania (kwartalne)
                         </div>
                         <div>
                                 <img src="{{url_for('static', filename='debt_q.png')}}">
                         </div>
 
                 </div>
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
-                                Zobowiązania i rezerwy na zobowiązania roczne
+                                Zobowiązania i rezerwy na zobowiązania (roczne)
                         </div>
                         <div>
                                 <img src="{{url_for('static', filename='debt_y.png')}}">
@@ -179,7 +179,7 @@
                 </div>
                 {% endif %}
                 {% if capital_status %}
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Kapitał własny(kwartał)
                         </div>
@@ -188,7 +188,7 @@
                         </div>
 
                 </div>
-                <div>
+                <div class="fiancial-chart-style">
                         <div class="book-header">
                                 Kapitał własny (roczne)
                         </div>

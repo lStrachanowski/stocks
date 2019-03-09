@@ -133,7 +133,11 @@ def stock(stockval):
     layout_reversed = go.Layout(
             xaxis=dict(
                 autorange='reversed'
-            )
+            ),
+            bargap =0.5
+    )
+    bars_style = go.Layout(
+            bargap =0.5
     )
 
     profit_data_y = [profit_data_net_y, profit_data_gross_y] 
@@ -145,7 +149,7 @@ def stock(stockval):
         x=dates[0:4], 
         y=sales[0]
         )]
-        fig_sales = go.Figure(data=sales_q)
+        fig_sales = go.Figure(data=sales_q, layout=bars_style)
         pio.write_image(fig_sales, 'static/sales_q.png',width=600, height=400)
         sales_y = [go.Bar(
         x=years, 
@@ -161,7 +165,7 @@ def stock(stockval):
         x=dates[0:4], 
         y=debt[0]
         )]
-        fig_sales = go.Figure(data=debt_q)
+        fig_sales = go.Figure(data=debt_q, layout=bars_style)
         pio.write_image(fig_sales, 'static/debt_q.png',width=600, height=400)
         debt_y = [go.Bar(
         x=years, 
@@ -178,7 +182,7 @@ def stock(stockval):
         x=dates[0:4], 
         y=capital[0]
         )]
-        fig_sales = go.Figure(data=capital_q)
+        fig_sales = go.Figure(data=capital_q, layout=bars_style)
         pio.write_image(fig_sales, 'static/capital_q.png',width=600, height=400)
         capital_y = [go.Bar(
         x=years, 
