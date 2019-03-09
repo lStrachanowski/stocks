@@ -78,6 +78,7 @@ def stock(stockval):
 
     gross_profit = []
     net_profit = []
+    sales = []
     # zysk brutto netto dla wykresu 
     dates = [x for x in financial_data[0] if x]
     for i in range(0,2):
@@ -87,6 +88,8 @@ def stock(stockval):
                     gross_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
                 elif val[0] == "Zysk (strata) netto":
                     net_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                elif val[0] == "Przychody netto ze sprzedaży produktów, towarów i materiałów":
+                    sales.append([int("".join(x.split()))*1000  for x in val[1] if x])
 
     profit_data_net_q = go.Bar(
         x=dates[0:4], 
@@ -123,7 +126,26 @@ def stock(stockval):
     profit_data_y = [profit_data_net_y, profit_data_gross_y] 
     profit_fig_y = go.Figure(data=profit_data_y, layout=profit_layout)
     pio.write_image(profit_fig_y, 'static/profits_y.png',width=600, height=400)
-    
+    print(sales)
+    if len(sales) > 0:
+        sales_status = True
+        sales_q = [go.Bar(
+        x=dates[0:4], 
+        y=sales[0]
+        )]
+        fig_sales = go.Figure(data=sales_q)
+        pio.write_image(fig_sales, 'static/sales_q.png',width=600, height=400)
+
+        sales_y = [go.Bar(
+        x=dates[4:8], 
+        y=sales[1]
+        )]
+        fig_sales = go.Figure(data=sales_y)
+        pio.write_image(fig_sales, 'static/sales_y.png',width=600, height=400)
+    else:
+        sales_status = False
+
+
 
 
     # Pobiera dane o akcjonariacie
@@ -251,11 +273,7 @@ def stock(stockval):
 
     return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
     , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
-    prices = stock_prices, details = company_details) 
-
-    # return render_template('stock.html', data_list=stock_list, stock_name=stockval[:-4], o_book=ten_orders, close_value = main_df.iloc[-1]['<CLOSE>']
-    # , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, shareholder = shareholders, ticker=ticker, 
-    # prices = stock_prices, details = company_details) 
+    prices = stock_prices, details = company_details, sales_status=sales_status) 
 
 
 @app.route('/analyze',methods=['GET', 'POST'])

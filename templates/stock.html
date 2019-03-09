@@ -135,6 +135,27 @@
                         </div>
 
                 </div>
+                {% if sales_status %}
+                <div>
+                        <div class="book-header">
+                                Przychody kwartalne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='sales_q.png')}}">
+                        </div>
+
+                </div>
+                <div>
+                        <div class="book-header">
+                                Przychody roczne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='sales_y.png')}}">
+                        </div>
+
+                </div>
+                {% endif %}
+
         </div>
 
         <div class="tables-container">
