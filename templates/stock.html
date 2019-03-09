@@ -81,7 +81,7 @@
 
                 </div>
 
-                 <div class="news-container">
+                <div class="news-container">
                         <div class="book-header">
                                 Dane finansowe
                         </div>
@@ -112,10 +112,30 @@
                                         {% endfor %}
                                 </div>
                         </div>
-                </div> 
+                </div>
 
         </div>
 
+        <div class="financial-chart-container">
+                <div class="financial-chart">
+                        <div class="book-header">
+                                Zyski kwartalne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='profits_q.png')}}">
+                        </div>
+
+                </div>
+                <div>
+                        <div class="book-header">
+                                Zyski roczne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='profits_y.png')}}">
+                        </div>
+
+                </div>
+        </div>
 
         <div class="tables-container">
                 <div class="table-spacing">

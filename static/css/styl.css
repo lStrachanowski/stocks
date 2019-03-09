@@ -403,3 +403,10 @@ a:visited{
 .company-data:nth-child(2){
     width: 85%;
 }
+
+.financial-chart-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
