@@ -75,125 +75,129 @@ def stock(stockval):
 
     # Pobiera dane fiansowe
     financial_data = get_financial_data(get_isin(stockval[:-4]))
-
     gross_profit = []
     net_profit = []
     sales = []
     debt = []
     capital = []
     dates = [x for x in financial_data[0] if x]
-    for i in range(0,2):
-        for val in  financial_data[1][i]:
-            if len(val) > 0 :
-                if val[0] == "Zysk (strata) brutto":
-                    gross_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
-                elif val[0] == "Zysk (strata) netto":
-                    net_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
-                elif val[0] == "Przychody netto ze sprzedaży produktów, towarów i materiałów":
-                    sales.append([int("".join(x.split()))*1000  for x in val[1] if x])
-                elif val[0] == "Zobowiązania i rezerwy na zobowiązania":
-                    debt.append([int("".join(x.split()))*1000  for x in val[1] if x])
-                elif val[0] == "Kapitał własny":
-                    capital.append([int("".join(x.split()))*1000  for x in val[1] if x])
+    try:
+        for i in range(0,2):
+            for val in  financial_data[1][i]:
+                if len(val) > 0 :
+                    if val[0] == "Zysk (strata) brutto":
+                        gross_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                    elif val[0] == "Zysk (strata) netto":
+                        net_profit.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                    elif val[0] == "Przychody netto ze sprzedaży produktów, towarów i materiałów":
+                        sales.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                    elif val[0] == "Zobowiązania i rezerwy na zobowiązania":
+                        debt.append([int("".join(x.split()))*1000  for x in val[1] if x])
+                    elif val[0] == "Kapitał własny":
+                        capital.append([int("".join(x.split()))*1000  for x in val[1] if x])
 
 
-    years = dates[4:8]
-    profit_data_net_q = go.Bar(
-        x=dates[0:4], 
-        y=net_profit[0],
-        name='net'
-    )
+        years = dates[4:8]
+        profit_data_net_q = go.Bar(
+            x=dates[0:4], 
+            y=net_profit[0],
+            name='net'
+        )
 
-    profit_data_gross_q = go.Bar(
-        x=dates[0:4], 
-        y=gross_profit[0],
-        name='gross'
-    )
-    
-    profit_layout = go.Layout(
-    barmode='group'
-    )
+        profit_data_gross_q = go.Bar(
+            x=dates[0:4], 
+            y=gross_profit[0],
+            name='gross'
+        )
+        
+        profit_layout = go.Layout(
+        barmode='group'
+        )
 
-    profit_data_q = [profit_data_net_q,profit_data_gross_q ] 
-    profit_fig_q = go.Figure(data=profit_data_q, layout=profit_layout)
-    pio.write_image(profit_fig_q, 'static/profits_q.png',width=600, height=400)
+        profit_data_q = [profit_data_net_q,profit_data_gross_q ] 
+        profit_fig_q = go.Figure(data=profit_data_q, layout=profit_layout)
+        pio.write_image(profit_fig_q, 'static/profits_q.png',width=600, height=400)
 
-    profit_data_net_y = go.Bar(
-        x=dates[4:8], 
-        y=net_profit[1],
-        name='net'
-    )
+        profit_data_net_y = go.Bar(
+            x=dates[4:8], 
+            y=net_profit[1],
+            name='net'
+        )
 
-    profit_data_gross_y = go.Bar(
-        x=years, 
-        y=gross_profit[1],
-        name='gross'
-    )
+        profit_data_gross_y = go.Bar(
+            x=years, 
+            y=gross_profit[1],
+            name='gross'
+        )
 
-    layout_reversed = go.Layout(
-            xaxis=dict(
-                autorange='reversed'
-            ),
-            bargap =0.5
-    )
-    bars_style = go.Layout(
-            bargap =0.5
-    )
+        layout_reversed = go.Layout(
+                xaxis=dict(
+                    autorange='reversed'
+                ),
+                bargap =0.5
+        )
+        bars_style = go.Layout(
+                bargap =0.5
+        )
 
-    profit_data_y = [profit_data_net_y, profit_data_gross_y] 
-    profit_fig_y = go.Figure(data=profit_data_y, layout=layout_reversed)
-    pio.write_image(profit_fig_y, 'static/profits_y.png',width=600, height=400)
-    if len(sales) > 0:
-        sales_status = True
-        sales_q = [go.Bar(
-        x=dates[0:4], 
-        y=sales[0]
-        )]
-        fig_sales = go.Figure(data=sales_q, layout=bars_style)
-        pio.write_image(fig_sales, 'static/sales_q.png',width=600, height=400)
-        sales_y = [go.Bar(
-        x=years, 
-        y=sales[1]
-        )]
-        fig_sales = go.Figure(data=sales_y, layout=layout_reversed )
-        pio.write_image(fig_sales, 'static/sales_y.png',width=600, height=400)
-    else:
-        sales_status = False
-    if len(debt) > 0:
-        debt_status = True
-        debt_q = [go.Bar(
-        x=dates[0:4], 
-        y=debt[0]
-        )]
-        fig_sales = go.Figure(data=debt_q, layout=bars_style)
-        pio.write_image(fig_sales, 'static/debt_q.png',width=600, height=400)
-        debt_y = [go.Bar(
-        x=years, 
-        y=debt[1]
-        )]
-        fig_sales = go.Figure(data=debt_y, layout=layout_reversed)
-        pio.write_image(fig_sales, 'static/debt_y.png',width=600, height=400)
-    else:
-        debt_status = False
+        profit_data_y = [profit_data_net_y, profit_data_gross_y] 
+        profit_fig_y = go.Figure(data=profit_data_y, layout=layout_reversed)
+        pio.write_image(profit_fig_y, 'static/profits_y.png',width=600, height=400)
+        if len(sales) > 0:
+            sales_status = True
+            sales_q = [go.Bar(
+            x=dates[0:4], 
+            y=sales[0]
+            )]
+            fig_sales = go.Figure(data=sales_q, layout=bars_style)
+            pio.write_image(fig_sales, 'static/sales_q.png',width=600, height=400)
+            sales_y = [go.Bar(
+            x=years, 
+            y=sales[1]
+            )]
+            fig_sales = go.Figure(data=sales_y, layout=layout_reversed )
+            pio.write_image(fig_sales, 'static/sales_y.png',width=600, height=400)
+        else:
+            sales_status = False
+        if len(debt) > 0:
+            debt_status = True
+            debt_q = [go.Bar(
+            x=dates[0:4], 
+            y=debt[0]
+            )]
+            fig_sales = go.Figure(data=debt_q, layout=bars_style)
+            pio.write_image(fig_sales, 'static/debt_q.png',width=600, height=400)
+            debt_y = [go.Bar(
+            x=years, 
+            y=debt[1]
+            )]
+            fig_sales = go.Figure(data=debt_y, layout=layout_reversed)
+            pio.write_image(fig_sales, 'static/debt_y.png',width=600, height=400)
+        else:
+            debt_status = False
 
-    if len(capital) > 0:
-        capital_status = True
-        capital_q = [go.Bar(
-        x=dates[0:4], 
-        y=capital[0]
-        )]
-        fig_sales = go.Figure(data=capital_q, layout=bars_style)
-        pio.write_image(fig_sales, 'static/capital_q.png',width=600, height=400)
-        capital_y = [go.Bar(
-        x=years, 
-        y=capital[1]
-        )]
-        fig_sales = go.Figure(data=capital_y, layout=layout_reversed)
-        pio.write_image(fig_sales, 'static/capital_y.png',width=600, height=400)
-    else:
-        capital_status = False
+        if len(capital) > 0:
+            capital_status = True
+            capital_q = [go.Bar(
+            x=dates[0:4], 
+            y=capital[0]
+            )]
+            fig_sales = go.Figure(data=capital_q, layout=bars_style)
+            pio.write_image(fig_sales, 'static/capital_q.png',width=600, height=400)
+            capital_y = [go.Bar(
+            x=years, 
+            y=capital[1]
+            )]
+            fig_sales = go.Figure(data=capital_y, layout=layout_reversed)
+            pio.write_image(fig_sales, 'static/capital_y.png',width=600, height=400)
+        else:
+            capital_status = False
 
-
+    except:
+            sales_status = False
+            debt_status = False
+            capital_status = False
+            print("no financial")
 
 
     # Pobiera dane o akcjonariacie

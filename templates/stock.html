@@ -126,6 +126,17 @@
                         </div>
 
                 </div>
+               
+                <div class="fiancial-chart-style">
+                        <div class="book-header">
+                                Zyski roczne
+                        </div>
+                        <div>
+                                <img src="{{url_for('static', filename='profits_y.png')}}">
+                        </div>
+
+                </div>
+
                 {% if sales_status %}
                 <div class="fiancial-chart-style">
                         <div class="book-header">
@@ -137,15 +148,7 @@
 
                 </div>
                 {% endif %}
-                <div class="fiancial-chart-style">
-                        <div class="book-header">
-                                Zyski roczne
-                        </div>
-                        <div>
-                                <img src="{{url_for('static', filename='profits_y.png')}}">
-                        </div>
-
-                </div>
+                
                 {% if sales_status %}
                 <div class="fiancial-chart-style">
                         <div class="book-header">
