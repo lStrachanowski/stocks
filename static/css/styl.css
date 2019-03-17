@@ -370,8 +370,24 @@ a:visited{
     justify-content: space-around;
 }
 
+.market-data-item-calendar{
+    padding: 1%;
+    background-color: rgba(191, 224, 219, 0.535);
+    margin: 5px;
+    transition: 0.2s;
+}
+
+.market-data-item-calendar:hover{
+    background-color: rgb(191, 224, 219);
+}
+
 .market-data-item-style{
     width: 10%;
+    margin: 10px 3px;
+}
+
+.market-data-item-style-calendardata{
+    width: 60%;
     margin: 10px 3px;
 }
 

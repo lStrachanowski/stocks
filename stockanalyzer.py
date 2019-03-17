@@ -327,6 +327,10 @@ def stock(stockval):
     , daily_return = round(a.iloc[-1]['<CLOSE>'],2), indicators=indicators, stock_news=news, shareholder = shareholders, ticker=ticker, fin_data = financial_data,
     prices = stock_prices, details = company_details, sales_status=sales_status, debt_status=debt_status, capital_status=capital_status) 
 
+@app.route('/calendar',methods=['GET', 'POST'])
+def calendar():
+    return render_template('calendar.html',data_list=stock_list, calendar_data = get_calendar() )
+
 
 @app.route('/analyze',methods=['GET', 'POST'])
 def data_analyze():
@@ -781,3 +785,20 @@ def price_book_value():
     results.sort(key = lambda x: x[2])
     return results
     
+# Pobiera kalendarz wydarzeń giełdowych
+def get_calendar():
+    base_url = r'https://www.bankier.pl/gielda/kalendarium/'
+    page = requests.get(base_url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        table = soup.find('div', {"id": "calendarContent"})
+        days = table.find_all('div',{"class":"calendarDay"})
+        calendar_data = []
+        for day in days:
+            day_date = day.find("time").text.strip().replace(u'\xa0', ' ')
+            events = day.find_all('div', {"class":"event"})
+            date_events = []
+            for event in events:
+                calendar_data.append([day_date, event.find('div', {"class": "company"}).text.strip(), event.find('div', {"class":"eventDescription"}).text.strip()])
+        print(calendar_data)
+        return calendar_data

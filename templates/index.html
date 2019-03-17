@@ -44,6 +44,9 @@
             {% endif %}
         </div>
         {% if show_tools %}
+        <form  method="POST" action="{{url_for('calendar')}}">  
+            <button class="search-btn red-btn wig" type="submit">Kalendarz rynkowy</button>
+        </form>
         <form  method="POST" action="{{url_for('market_data')}}">  
             <button class="search-btn red-btn wig" type="submit">Market data</button>
         </form>

@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+{% block content%}
+<div class="market-data-container">
+    <div class="book-header">
+        Kalendarz
+    </div>
+    <div class="market-data-item market-data-item-style-header">
+        <div class="market-data-item-style">
+            Data
+        </div>
+        <div class="market-data-item-style">
+            Symbol
+        </div>
+        <div class="market-data-item-style-calendardata">
+            Wydarzenie
+        </div>
+
+    </div>
+    {% for date in calendar_data %}
+    <div class="market-data-item market-data-item-calendar">
+        <div class="market-data-item-style">
+            {{date[0]}}
+        </div>
+        <div class="market-data-item-style">
+            {{date[1]}}
+        </div>
+        <div class="market-data-item-style-calendardata">
+            {{date[2]}}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
