@@ -800,5 +800,4 @@ def get_calendar():
             date_events = []
             for event in events:
                 calendar_data.append([day_date, event.find('div', {"class": "company"}).text.strip(), event.find('div', {"class":"eventDescription"}).text.strip()])
-        print(calendar_data)
         return calendar_data
