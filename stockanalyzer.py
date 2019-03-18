@@ -792,6 +792,7 @@ def get_calendar():
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         table = soup.find('div', {"id": "calendarContent"})
+        print(table)
         days = table.find_all('div',{"class":"calendarDay"})
         calendar_data = []
         for day in days:
@@ -799,5 +800,6 @@ def get_calendar():
             events = day.find_all('div', {"class":"event"})
             date_events = []
             for event in events:
-                calendar_data.append([day_date, event.find('div', {"class": "company"}).text.strip(), event.find('div', {"class":"eventDescription"}).text.strip()])
+                if event.find('div', {"class": "company"}):
+                    calendar_data.append([day_date, event.find('div', {"class": "company"}).text.strip(), event.find('div', {"class":"eventDescription"}).text.strip()])
         return calendar_data
